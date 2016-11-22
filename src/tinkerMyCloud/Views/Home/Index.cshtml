@@ -5,14 +5,15 @@
 <div>
     <h1>Tinker upload file</h1>
     <p>api uri get all (json): http://localhost:0000/api/Rest </p>
+    <br />
 </div>
-
+<!--Ladda upp fil till disk-->
 <div>
     @using (Html.BeginForm("FileUpload", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "SubmitTarget" }))
     {
         @Html.ValidationSummary();
 
-        <p> Välj en fil att ladda upp</p>
+        <p> Välj en fil att ladda upp (bortkopplad för att testa Blob api)</p>
         <div>
             <input type="file" id="fileToUpload" name="file" />
         </div>
@@ -21,4 +22,22 @@
             <button type="submit" class="btn btn-default" value="Upload">Lägg till fil</button>
         </div>
     }
+    <br />
+</div>
+<!--ladda upp fil med api, för att spara som blob-->
+<div>
+    @using (Html.BeginForm("FileUploadAPI", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id = "SubmitTarget" }))
+    {
+        @Html.ValidationSummary();
+
+        <p> Välj en fil att ladda upp med API</p>
+        <div>
+            <input type="file" id="fileToUploadAsAPI" name="fileAPI" />
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-default" value="Upload">Lägg till fil</button>
+        </div>
+    }
+    <br />
 </div>

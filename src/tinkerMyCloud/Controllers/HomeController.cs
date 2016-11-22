@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using tinkerMyCloud.Models;
+using Newtonsoft.Json;
 
 namespace tinkerMyCloud.Controllers
 {
@@ -23,6 +25,7 @@ namespace tinkerMyCloud.Controllers
             return View();
         }
 
+        //Ladda up fil till disk
         [HttpPost]
         public async Task<IActionResult> FileUpLoad(IFormFile file, [FromServices]Interface.IMyCloudBusinessLayer _businessLayer)
         {
@@ -43,6 +46,61 @@ namespace tinkerMyCloud.Controllers
             }
             string saveNameUrl = file.FileName;
             bool testAddNoApi = await _businessLayer.AddFileNoApi(saveNameUrl);
+            return View("Index");
+        }
+
+        //Ladda upp fil till blob via API
+        [HttpPost]
+        public async Task<IActionResult> FileUpLoadAPI(IFormFile fileAPI)
+        {
+            var uploads = Path.Combine(_environment.WebRootPath, "/Temp/");
+            uploads = @"C:\Projekt\tinkerMyCloud\src\tinkerMyCloud\Temp"; //TODO: relativ sökväg
+            if (fileAPI == null)
+            {
+                throw new NotImplementedException();
+            }
+            else if (fileAPI.Length > 0)
+            {
+                byte[] array = new byte[0];
+                using (var fileStream = new FileStream(Path.Combine(uploads, fileAPI.FileName), FileMode.Create))
+                {
+                    await fileAPI.CopyToAsync(fileStream);
+
+                    // Skapa array 
+                    byte[] fileArray = new byte[fileStream.Length];
+
+                    // konventera stream till array
+                    fileStream.Read(fileArray, 0, System.Convert.ToInt32(fileStream.Length));
+
+                    // sätt array utanför scope
+                    array = fileArray;
+                }
+
+                // skicka api..
+                var myfile = new FileBlob();
+                myfile.Id = 0;
+                myfile.FileName = "testNshit";
+                myfile.MimeType = "kgbShitTypeOfFile";
+                myfile.FileData = array;
+
+                var jsondata = JsonConvert.SerializeObject(myfile);
+
+                var uri = new Uri("http://localhost:1729/api/Rest");
+
+                var client = new System.Net.Http.HttpClient();
+
+                System.Net.Http.HttpContent contentPost = new System.Net.Http.StringContent(jsondata, System.Text.Encoding.UTF8, "application/json");
+                try
+                {
+                    var response = client.PostAsync(uri, contentPost);
+                }
+                catch (Exception)
+                {
+                    throw new NotImplementedException();
+                }
+
+                //TODO: tabort temp fil som sparas till stream..
+            }
             return View("Index");
         }
 

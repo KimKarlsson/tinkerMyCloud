@@ -12,5 +12,6 @@ namespace tinkerMyCloud.Interface
         Task<List<FileItem>> GetAllFileItems();
         Task<bool> AddFileItemApi(FileItem item);
         Task<bool> AddFileNoApi(string file);
+        Task<bool> AddFileUsingExAPI(FileBlob item);
     }
 }

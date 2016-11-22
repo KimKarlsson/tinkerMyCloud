@@ -57,6 +57,12 @@ namespace tinkerMyCloud.Classes
 
         }
 
+        // Save upload to db (blob) using external aip
+        public async Task<bool> AddFileUsingExAPI(FileBlob item)
+        {
+            bool add = await Add(item);
+            return add;
+        }
 
         // Metod för Add
         private async Task<bool> Add(object create)
@@ -75,5 +81,6 @@ namespace tinkerMyCloud.Classes
 
         //Exempel "get all"
         // http://localhost:0000/api/Rest 
+
     }
 }

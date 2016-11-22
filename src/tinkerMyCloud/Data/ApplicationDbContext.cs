@@ -14,8 +14,11 @@ namespace tinkerMyCloud.Data
             : base(options)
         {
         }
-
+        // testa att spara fil på disk
         public DbSet<FileItem> dbFileItem { get; set; }
+
+        // testa att spara fil som blob
+        public DbSet<FileBlob> dbFileBlob { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
